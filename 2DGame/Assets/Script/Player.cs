@@ -7,7 +7,33 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 3f;
 
+    [SerializeField]
+    private float playerJumpforce = 0.1f;
+
+    [SerializeField]
+    private GameObject bulletObj = null;
+
+    [SerializeField]
+    private GameObject InstantiateObj = null;
+
+    private bool jump = false;
+
     void Update()
+    {
+        Move();
+
+        if(Input.GetButtonDown("Jump"))
+        {
+            playerJump();
+        }
+
+        if(Input.GetButtonDown("Fire1"))
+        {
+            Fire();
+        }
+    }
+
+    void Move()
     {
         float h = Input.GetAxis("Horizontal");
         float playerSpeed = h * moveSpeed * Time.deltaTime;
@@ -17,7 +43,7 @@ public class Player : MonoBehaviour
 
         transform.Translate(vector3);
 
-        if(h < 0)
+        if (h < 0)
         {
             GetComponent<Animator>().SetBool("Walk", true);
             transform.localScale = new Vector3(-1, 1, 1);
@@ -31,5 +57,31 @@ public class Player : MonoBehaviour
             GetComponent<Animator>().SetBool("Walk", true);
             transform.localScale = new Vector3(1, 1, 1);
         }
+    }
+
+    void playerJump()
+    {
+        GetComponent<Animator>().SetBool("Walk", false);
+        GetComponent<Animator>().SetBool("Jump", true);
+
+        Vector2 vector2 = new Vector2(0, playerJumpforce);
+        GetComponent<Rigidbody2D>().AddForce(vector2);
+        jump = true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.collider.tag == "Plattform")
+        {
+            GetComponent<Animator>().SetBool("Jump", false);
+            jump = false;
+        }
+    }
+
+    void Fire()
+    {
+        float direction = transform.localScale.x;
+        Quaternion quaternion = new Quaternion(0, 0, 0, 0);
+        Instantiate(bulletObj, InstantiateObj.transform.position, quaternion).GetComponent<Bullet>().InstantiateBullet(direction);
     }
 }

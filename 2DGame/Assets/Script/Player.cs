@@ -16,13 +16,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject InstantiateObj = null;
 
+    private bool move = false;
+    private float moveHorizontal = 0;
+
     private bool jump = false;
 
     void Update()
     {
-        Move();
+        if(move)
+        {
+            Move();
+        }
 
-        if(Input.GetButtonDown("Jump"))
+        if(!jump && Input.GetButtonDown("Jump"))
         {
             playerJump();
         }
@@ -35,7 +41,8 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-        float h = Input.GetAxis("Horizontal");
+        //float h = Input.GetAxis("Horizontal");
+        float h = moveHorizontal;
         float playerSpeed = h * moveSpeed * Time.deltaTime;
 
         Vector3 vector3 = new Vector3();
@@ -80,9 +87,32 @@ public class Player : MonoBehaviour
 
     void Fire()
     {
+        AudioClip audioClip = Resources.Load<AudioClip>("RangedAttack") as AudioClip;
+        GetComponent<AudioSource>().clip = audioClip;
         GetComponent<AudioSource>().Play();
         float direction = transform.localScale.x;
         Quaternion quaternion = new Quaternion(0, 0, 0, 0);
         Instantiate(bulletObj, InstantiateObj.transform.position, quaternion).GetComponent<Bullet>().InstantiateBullet(direction);
+    }
+
+    public void OnMove(bool _right)
+    {
+        if(_right)
+        {
+            moveHorizontal = 1;
+        }
+        else
+        {
+            moveHorizontal = -1;
+        }
+
+        move = true;
+    }
+
+    public void OffMove()
+    {
+        moveHorizontal = 0;
+
+        move = false;
     }
 }

@@ -23,6 +23,7 @@ public class DataManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Load();
         DontDestroyOnLoad(gameObject);
     }
 

@@ -99,9 +99,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnCollisionExitr2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Enemy")
+        if (collision.collider.tag == "Player")
         {
             DataManager.instance.playerHP -= 1;
             if(DataManager.instance.playerHP < 0)

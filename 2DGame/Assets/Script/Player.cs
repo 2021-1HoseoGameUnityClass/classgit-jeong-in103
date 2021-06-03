@@ -23,7 +23,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if(move)
+        //Move();
+
+        if (move)
         {
             Move();
         }
